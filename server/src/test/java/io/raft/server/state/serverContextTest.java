@@ -12,12 +12,12 @@ public class serverContextTest {
     @Test
     void metaStoreSurvivesRestart() throws IOException {
 
-        serverContext ctx = new serverContext(new File("raft-test"));
+        serverContext ctx = new serverContext(new File("raft-test"),1);
 
         ctx.setCurrentTerm(3);
         ctx.setVotedFor(2);
 
-        serverContext ctx2 = new serverContext(new File("raft-test"));
+        serverContext ctx2 = new serverContext(new File("raft-test"),1);
 
         assertEquals(3, ctx2.getCurrentTerm());
         assertEquals(2, ctx2.getVotedFor());

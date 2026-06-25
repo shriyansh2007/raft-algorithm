@@ -8,9 +8,11 @@ import io.raft.server.storage.system.metaStore;
 
 
 public class serverContext{
+    private final int myId;
     private final metaStore metaStore;
     private final Log log;
-    public serverContext(File dataDir) throws IOException{
+    public serverContext(File dataDir, int myId) throws IOException{
+        this.myId=myId;
         this.metaStore= new metaStore(dataDir);
         this.log=new Log();
         this.currentTerm= metaStore.loadTerm();
@@ -26,6 +28,9 @@ public class serverContext{
     private long lastApplied=0;
     private int leader=-1;
     private raftServer.State state= raftServer.State.INACTIVE;
+    public int getMyId(){
+        return myId;
+    }
     public long getCurrentTerm(){
         return currentTerm;
     }
