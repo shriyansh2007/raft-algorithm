@@ -1,5 +1,8 @@
 package io.raft.server.state;
 
+import io.raft.protocol.AppendRequest;
+import io.raft.protocol.AppendResponse;
+import io.raft.protocol.Entry.Entry;
 import io.raft.protocol.VoteRequest;
 import io.raft.protocol.VoteResponse;
 
@@ -53,7 +56,7 @@ public class FollowerState {
     }
 
     private boolean isCandidateLogUpToDate(long theirIndex,
-                                           long theirTerm) {
+            long theirTerm) {
 
         long myLastTerm = ctx.getLog().lastTerm();
         long myLastIndex = ctx.getLog().lastIndex();
@@ -67,5 +70,63 @@ public class FollowerState {
         }
 
         return theirIndex >= myLastIndex;
+    }
+
+    public AppendResponse handleAppend(AppendRequest req) throws Exception {
+        if (req.getTerm() < ctx.getCurrentTerm()) {
+            return AppendResponse.builder().withTerm(ctx.getCurrentTerm()).withLogIndex(ctx.getLog().lastIndex()).withSuccess(false).build();
+
+        }
+        if (req.getTerm() > ctx.getCurrentTerm()) {
+            ctx.setCurrentTerm(req.getTerm());
+            ctx.setVotedFor(-1);
+        }
+        ctx.setLeader(req.getLeader());
+        resetElectionTimer();
+        if (req.getPrevLogIndex() > 0) {
+            Entry prev = ctx.getLog().get(req.getPrevLogIndex());
+            if (prev == null || prev.getTerm() != req.getPrevLogTerm()) {
+                return AppendResponse.builder().withTerm(ctx.getCurrentTerm()).withSuccess(false).withLogIndex(ctx.getLog().lastIndex()).build();
+            }
+
+        }
+        if (req.getEntries() != null && !req.getEntries().isEmpty()) {
+            for (Entry entry : req.getEntries()) {
+                Entry existing = ctx.getLog().get(entry.getIndex());
+                if (existing != null && existing.getTerm() != entry.getTerm()) {
+
+                    ctx.getLog().truncate(entry.getIndex());
+                }
+                if (ctx.getLog().get(entry.getIndex()) == null) {
+                    ctx.getLog().append(entry);
+                }
+            }
+
+        }
+        if (req.getCommitIndex() > ctx.getCommitIndex()) {
+            long newCommit = Math.min(req.getCommitIndex(), ctx.getLog().lastIndex());
+            ctx.setCommitIndex(newCommit);
+            applyCommitted();
+
+        }
+        return AppendResponse.builder().withTerm(ctx.getCurrentTerm()).withSuccess(true).withLogIndex(ctx.getLog().lastIndex()).build();
+
+    }
+
+    private void applyCommitted() {
+
+        while (ctx.getLastApplied() < ctx.getCommitIndex()) {
+            long idx = ctx.getLastApplied() + 1;
+            Entry e = ctx.getLog().get(idx);
+            if (e != null) {
+                System.out.println("Applying entry at index " + idx);
+                ctx.setLastApplied(idx);
+            }
+        }
+    }
+
+    private void resetElectionTimer() {
+
+        System.out.println("Election timer reset — leader is alive");
     }
 }

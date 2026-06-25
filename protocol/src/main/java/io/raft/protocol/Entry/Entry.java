@@ -1,4 +1,4 @@
-package io.raft.server.storage.Entry;
+package io.raft.protocol.Entry;
 public abstract class Entry{
     private long Index;
     private long Term;

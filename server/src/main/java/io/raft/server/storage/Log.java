@@ -2,7 +2,7 @@ package io.raft.server.storage;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.raft.server.storage.Entry.Entry;
+import io.raft.protocol.Entry.Entry;
 public class Log{
     private final List<Entry> entries= new ArrayList<>();
     public synchronized long append(Entry entry){

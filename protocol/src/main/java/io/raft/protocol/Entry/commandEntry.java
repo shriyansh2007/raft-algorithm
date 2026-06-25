@@ -1,4 +1,4 @@
-package io.raft.server.storage.Entry;
+package io.raft.protocol.Entry;
 public class commandEntry extends Entry{
     private byte[] command;
     private long session;

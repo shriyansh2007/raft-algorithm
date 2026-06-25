@@ -1,6 +1,11 @@
 io\raft\protocol\VoteRequest.class
-io\raft\protocol\VoteResponse$Builder.class
 io\raft\protocol\VoteRequest$1.class
-io\raft\protocol\VoteResponse$1.class
+io\raft\protocol\Entry\Entry.class
+io\raft\protocol\AppendRequest$Builder.class
 io\raft\protocol\VoteRequest$Builder.class
+io\raft\protocol\AppendRequest$1.class
+io\raft\protocol\AppendRequest.class
+io\raft\protocol\VoteResponse$Builder.class
+io\raft\protocol\Entry\commandEntry.class
+io\raft\protocol\VoteResponse$1.class
 io\raft\protocol\VoteResponse.class

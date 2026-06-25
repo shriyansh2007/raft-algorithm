@@ -11,6 +11,9 @@ public class serverContext{
     private final int myId;
     private final metaStore metaStore;
     private final Log log;
+    
+    
+    
     public serverContext(File dataDir, int myId) throws IOException{
         this.myId=myId;
         this.metaStore= new metaStore(dataDir);
@@ -31,12 +34,27 @@ public class serverContext{
     public int getMyId(){
         return myId;
     }
+    public long getLastApplied(){
+        return lastApplied;
+    }
+    public void setLastApplied(long lastApplied){
+        this.lastApplied=lastApplied;
+    }
     public long getCurrentTerm(){
         return currentTerm;
+    }
+    public long getCommitIndex(){
+        return commitIndex;
+    }
+    public void setCommitIndex(long commitIndex){
+        this.commitIndex=commitIndex;
     }
     public void setCurrentTerm(long term) throws IOException{
         this.currentTerm= term;
         metaStore.storeTerm(term);
+    }
+    public void setLeader(int leader){
+        this.leader=leader;
     }
 
     public int getVotedFor(){
