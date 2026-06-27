@@ -33,6 +33,11 @@ public class AppendRequest {
         return leader;
 
     }
+    public int setLeader(int l){
+        
+        
+        return leader;
+    }
 
     public long getPrevLogIndex() {
         return prevLogIndex;

@@ -12,9 +12,11 @@ public class Log{
         return index;
 
     }
-    public synchronized Entry get(long index){
-        return entries.get((int)(index - 1));
-
+    public Entry get(long index) {
+        if (index <= 0 || index > entries.size()) {
+            return null;
+        }
+        return entries.get((int) index - 1);
     }
     public synchronized long lastIndex(){
         return entries.size();

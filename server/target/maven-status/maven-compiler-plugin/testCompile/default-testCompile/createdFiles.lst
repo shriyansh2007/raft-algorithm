@@ -1,2 +1,3 @@
+io\raft\server\ReplicationTest.class
 io\raft\server\ElectionTest.class
 io\raft\server\state\serverContextTest.class
