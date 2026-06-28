@@ -1,6 +1,7 @@
 package io.raft.protocol;
-
-public class AppendResponse {
+import java.io.Serializable;
+public class AppendResponse implements Serializable {
+    private static final long serialVersionUID=1L;
 
     private final long term;
     private final boolean success;

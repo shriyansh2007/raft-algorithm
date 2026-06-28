@@ -2,10 +2,12 @@ package io.raft.protocol;
 
 import java.util.Collections;
 import java.util.List;
+import java.io.Serializable;
 
 import io.raft.protocol.Entry.Entry;
 
-public class AppendRequest {
+public class AppendRequest implements Serializable {
+    private static final long serialVersionUID=1L;
 
     private final long term;
     private final int leader;

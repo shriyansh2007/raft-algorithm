@@ -1,11 +1,13 @@
 package io.raft.protocol;
+import java.io.Serializable;
 
-public class VoteRequest {
+public class VoteRequest implements Serializable {
 
     private final long term;
     private final int candidate;
     private final long logIndex;
     private final long logTerm;
+    private static final long serialVersionUID=1L;
 
     private VoteRequest(Builder b) {
         this.term = b.term;

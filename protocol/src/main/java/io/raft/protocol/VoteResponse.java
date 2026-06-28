@@ -1,7 +1,9 @@
 package io.raft.protocol;
-public class VoteResponse{
+import java.io.Serializable;
+public class VoteResponse implements Serializable{
     private final long term;
     private final boolean voteGranted;
+    private static final long serialVersionUID=1L;
     private VoteResponse(Builder b){
         this.term= b.term;
         this.voteGranted= b.voteGranted;

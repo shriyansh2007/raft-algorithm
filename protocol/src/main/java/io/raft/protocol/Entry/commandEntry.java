@@ -1,5 +1,8 @@
 package io.raft.protocol.Entry;
-public class commandEntry extends Entry{
+import java.io.Serializable;
+public class commandEntry extends Entry implements Serializable{
+    private static final long serialVersionUID=1L;
+    
     private byte[] command;
     private long session;
     private long sequence;

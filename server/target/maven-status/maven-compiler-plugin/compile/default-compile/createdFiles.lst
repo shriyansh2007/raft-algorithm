@@ -1,8 +1,15 @@
-io\raft\server\raftServer.class
-io\raft\server\storage\Log.class
+io\raft\server\RaftNode.class
 io\raft\server\state\CandidateState.class
 io\raft\server\state\FollowerState.class
 io\raft\server\state\serverContext.class
+io\raft\server\network\RaftPeerClient.class
+io\raft\server\network\Serializer.class
 io\raft\server\state\LeaderState.class
 io\raft\server\storage\system\metaStore.class
 io\raft\server\raftServer$State.class
+io\raft\server\raftServer.class
+io\raft\server\network\PeerAddress.class
+io\raft\server\RaftNode$1.class
+io\raft\server\storage\Log.class
+io\raft\server\network\RaftServerListener.class
+io\raft\server\network\MessageFramer.class

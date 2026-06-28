@@ -12,46 +12,56 @@ import io.raft.protocol.VoteRequest;
 import io.raft.protocol.VoteResponse;
 import io.raft.server.raftServer;
 
-
 public class FollowerState {
 
     private final serverContext ctx;
-    private final ScheduledExecutorService schedular= Executors.newSingleThreadScheduledExecutor();
+    // private final ScheduledExecutorService schedular= Executors.newSingleThreadScheduledExecutor();
+    private ScheduledExecutorService schedular;
     private ScheduledFuture<?> electionTimer;
-    private static final long ELECTION_TIMEOUT_MS=300;
-    private static final long ELECTION_JITTER_MS=150;
-    public void start(){
+    private static final long ELECTION_TIMEOUT_MS = 300;
+    private static final long ELECTION_JITTER_MS = 150;
+
+    public void start() {
+        schedular = Executors.newSingleThreadScheduledExecutor();
         resetElectionTimer();
     }
-    public void stop(){
-        if(electionTimer!=null){
+
+    public void stop() {
+        if (electionTimer != null) {
+            electionTimer.cancel(true);
+        }
+
+        if (schedular != null) {
+            schedular.shutdownNow();
+        }
+    }
+
+    private void resetElectionTimer() {
+        if (electionTimer != null) {
             electionTimer.cancel(false);
         }
-        schedular.shutdown();
-    }
-    private void resetElectionTimer() {
-        if (electionTimer != null) electionTimer.cancel(false);
 
-        
-        long delay = ELECTION_TIMEOUT_MS+ (long)(Math.random() * ELECTION_JITTER_MS);
+        long delay = ELECTION_TIMEOUT_MS + (long) (Math.random() * ELECTION_JITTER_MS);
 
         electionTimer = schedular.schedule(
-        this::startElection,
-        delay,
-        TimeUnit.MILLISECONDS
+                this::startElection,
+                delay,
+                TimeUnit.MILLISECONDS
         );
     }
+
     private void startElection() {
         System.out.println("Server " + ctx.getMyId()
-        + ": election timer fired — no leader heard. "
-        + "Transitioning to CANDIDATE.");
+                + ": election timer fired — no leader heard. "
+                + "Transitioning to CANDIDATE.");
         ctx.setState(raftServer.State.CANDIDATE);
     }
 
     public FollowerState(serverContext ctx) {
         this.ctx = ctx;
     }
-    public serverContext getContext(){
+
+    public serverContext getContext() {
         return ctx;
     }
 
@@ -166,5 +176,4 @@ public class FollowerState {
         }
     }
 
-    
 }

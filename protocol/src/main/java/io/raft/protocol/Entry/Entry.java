@@ -1,5 +1,8 @@
 package io.raft.protocol.Entry;
-public abstract class Entry{
+import java.io.Serializable;
+public abstract class Entry implements Serializable{
+    private static final long serialVersionUID=1L;
+    
     private long Index;
     private long Term;
     public long getIndex(){
